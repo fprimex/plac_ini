@@ -1,4 +1,4 @@
-==Installation
+# Installation
 
 Installation follows the same steps as [plac](https://pypi.python.org/pypi/plac/). If you are lazy, just perform
 
@@ -19,13 +19,11 @@ $ python setup.py install
 
 in the main directory, possibly as superuser.
 
-Testing
---------
+# Testing
 
 Still working on tests!
 
-Documentation
---------------
+# Documentation
 
 The plac_ini module adds configuration file (INI) parsing to the plac module.
 The plac module is a tool for building command line interfaces using Python.
