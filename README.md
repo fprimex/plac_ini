@@ -37,7 +37,7 @@ be used to set options.
 Example:
 
 ```
-#!/usr/bin/env python3
+#!/usr/bin/env python
 
 import os
 import plac
