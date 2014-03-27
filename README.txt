@@ -130,6 +130,9 @@ A few items of note:
   That is, if a config file has many more sections and items, they will not be
   provided in the argument list.
 
+* All things that plac can do, hopefully plac_ini works with, so reference that
+  documentation and send me bug reports. I am going to work on tests.
+
 The source code is hosted on Github.
 
 https://github.com/fprimex/plac_ini
