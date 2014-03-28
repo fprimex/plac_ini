@@ -1,17 +1,17 @@
 __version__ = '0.9.1'
 
-import os
 import sys
-try:
-    import configparser
-except ImportError:
-    import ConfigParser as configparser
 
 # defaults are defined by the function
 # defaults are overridden with values from config file
 # defaults and config file are overridden with command line parameters
 
 def _read_config(config, default_section=None):
+    try:
+        import configparser
+    except ImportError:
+        import ConfigParser as configparser
+
     if sys.version >= '3':
         cp = configparser.SafeConfigParser()
         try:
@@ -43,14 +43,18 @@ def _read_config(config, default_section=None):
             cfg['%s%s' % (prefix, k)] = v
     return cfg
 
-def call(obj, config, default_section=None, arglist=sys.argv[1:], eager=True):
+def call(obj, arglist=sys.argv[1:], eager=True, config=None,
+         default_section=None):
+    import plac
+
+    if config is None:
+        return plac.call(obj, arglist=arglist, eager=eager)
+
     try:
         from itertools import zip_longest
     except ImportError:
         from itertools import izip_longest as zip_longest
         
-    import plac
-
     argparser = plac.parser_from(obj)
     argnames = argparser.argspec.args
     defaults = argparser.argspec.defaults
