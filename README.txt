@@ -68,7 +68,7 @@ Example:
 
     if __name__ == '__main__':
         gitconfig = os.path.join(os.path.expanduser('~'), '.gitconfig')
-        plac_ini.call(main, gitconfig)
+        plac_ini.call(main, config=gitconfig)
 
 My ~/.gitconfig looks like the following.
 
@@ -130,6 +130,10 @@ A few items of note:
 
 * All things that plac can do, hopefully plac_ini works with, so reference that
   documentation and send me bug reports. I am going to work on tests.
+
+* The code is written to be compatible with plac.call. If 'config=FILEPATH' is
+  not given, then plac_ini.call just calls plac.call. I've done this so the
+  code would be easier to include in plac proper in the future.
 
 The source code is hosted on Github.
 
