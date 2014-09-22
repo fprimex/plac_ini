@@ -3,6 +3,9 @@ try:
 except ImportError:
     from distutils.core import setup
 import os.path
+import sys
+
+should_2to3 = sys.version >= '3'
 
 def require(*modules):
     """Check if the given modules are already available; if not add them to
@@ -35,7 +38,7 @@ if __name__ == '__main__':
           py_modules = ['plac_ini'],
           scripts = [],
           install_requires=require('plac'),
-          use_2to3=True,
+          use_2to3=should_2to3,
           keywords="command line arguments parser",
           platforms=["All"],
           classifiers=['Development Status :: 3 - Alpha',
