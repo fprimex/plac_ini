@@ -10,7 +10,7 @@ which will install the module on your system (and possibly argparse
 too, if it is not already installed).
 
 If you prefer to install the full distribution from source, including
-the documentation, download the [zip](https://github.com/fprimex/plac_ini/archive/master.zip), unpack it and run
+the documentation, download the [tarball](http://pypi.python.org/pypi/plac_ini), unpack it and run
 
 ```
 $ python setup.py install
