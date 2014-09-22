@@ -28,8 +28,7 @@ if __name__ == '__main__':
     setup(name='plac_ini',
           version=getversion(
             os.path.join(os.path.dirname(__file__), 'plac_ini.py')),
-          description=('Adds configuration file support to the smartest '
-                       'command line arguments parser in the world'),
+          description=('Adds configuration file support to plac'),
           long_description=open('README.txt').read(),
           author='Brent Woodruff',
           author_email='brent@fprimex.com',

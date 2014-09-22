@@ -3,14 +3,14 @@
 Installation follows the same steps as [plac](https://pypi.python.org/pypi/plac/). If you are lazy, just perform
 
 ```
-$ pip install https://github.com/fprimex/plac_ini/archive/master.zip
+$ pip install plac_ini
 ```
 
 which will install the module on your system (and possibly argparse
-too, if it is not already installed). 
+too, if it is not already installed).
 
 If you prefer to install the full distribution from source, including
-the documentation, download the [tarball](https://github.com/fprimex/plac_ini/archive/master.zip), unpack it and run
+the documentation, download the [zip](https://github.com/fprimex/plac_ini/archive/master.zip), unpack it and run
 
 ```
 $ python setup.py install
@@ -31,7 +31,7 @@ As with plac, the approach is to define a function in Python, annotate it using
 either the plac.annotations dectorator or Python 3's native annotations, then
 use plac_ini.call (rather than plac.call) to call your function. With
 plac_ini.call, you will also provide the path to a configuration file that can
-be used to set options.
+be used to set options and optionally a default INI section.
 
 Example:
 
