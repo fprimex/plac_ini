@@ -5,7 +5,7 @@ import sys
 should_2to3 = sys.version >= '3'
 
 setup(name='plac_ini',
-      version='0.9.2',
+      version='0.9.3',
       description=('Adds configuration file support to plac'),
       long_description=open('README.txt').read(),
       author='Brent Woodruff',
