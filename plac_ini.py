@@ -1,5 +1,3 @@
-__version__ = '0.9.2'
-
 import sys
 
 # defaults are defined by the function

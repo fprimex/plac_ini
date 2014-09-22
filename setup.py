@@ -18,16 +18,9 @@ def require(*modules):
             deplist.append(module)
     return deplist
 
-def getversion(fname):
-    "Get the __version__ without importing plac"
-    for line in open(fname):
-        if line.startswith('__version__'):
-            return eval(line[13:])
-
 if __name__ == '__main__':
     setup(name='plac_ini',
-          version=getversion(
-            os.path.join(os.path.dirname(__file__), 'plac_ini.py')),
+          version='0.9.2',
           description=('Adds configuration file support to plac'),
           long_description=open('README.txt').read(),
           author='Brent Woodruff',
@@ -50,3 +43,4 @@ if __name__ == '__main__':
                        'Topic :: Software Development :: Libraries',
                        'Topic :: Utilities'],
           zip_safe=False)
+
