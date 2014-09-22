@@ -1,7 +1,4 @@
-try:
-    from setuptools import setup
-except ImportError:
-    from distutils.core import setup
+from setuptools import setup
 import os.path
 import sys
 
@@ -29,7 +26,7 @@ if __name__ == '__main__':
           license="BSD License",
           py_modules = ['plac_ini'],
           scripts = [],
-          install_requires=require('plac'),
+          install_requires=['plac'],
           use_2to3=should_2to3,
           keywords="command line arguments ini file parser",
           platforms=["All"],
