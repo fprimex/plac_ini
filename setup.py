@@ -39,7 +39,7 @@ if __name__ == '__main__':
           scripts = [],
           install_requires=require('plac'),
           use_2to3=should_2to3,
-          keywords="command line arguments parser",
+          keywords="command line arguments ini file parser",
           platforms=["All"],
           classifiers=['Development Status :: 3 - Alpha',
                        'Intended Audience :: Developers',
