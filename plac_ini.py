@@ -54,7 +54,7 @@ def call(obj, arglist=sys.argv[1:], eager=True, config=None,
         from itertools import zip_longest
     except ImportError:
         from itertools import izip_longest as zip_longest
-        
+
     argparser = plac.parser_from(obj)
     argnames = argparser.argspec.args
     defaults = argparser.argspec.defaults
