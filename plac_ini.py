@@ -1,4 +1,5 @@
 import sys
+import argparse
 
 # defaults are defined by the function
 # defaults are overridden with values from config file
@@ -41,9 +42,29 @@ def _read_config(config, default_section=None):
             cfg['%s%s' % (prefix, k)] = v
     return cfg
 
+
+def add_gnu_argument(self, *args, **kwargs):
+    "Prevent the addition of any single hyphen, multiple letter args"
+
+    gnu_args = []
+
+    for arg in args:
+        # Fix if we have at least 3 chars where the first is a hyphen
+        # and the second is not a hyphen (e.g. -op becomes --op)
+        if len(arg) > 3 and arg[0] == '-' and arg[1] != '-':
+            gnu_args.append('-' + arg)
+        else:
+            gnu_args.append(arg)
+
+    argparse.ArgumentParser.add_argument(self, *gnu_args, **kwargs)
+
+
 def call(obj, arglist=sys.argv[1:], eager=True, config=None,
-         default_section=None):
+         default_section=None, gnu=True):
     import plac
+
+    if gnu:
+        plac.ArgumentParser.add_argument = add_gnu_argument
 
     if config is None:
         return plac.call(obj, arglist=arglist, eager=eager)
