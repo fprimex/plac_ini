@@ -1,18 +1,54 @@
 import sys
+
+try:
+    from itertools import zip_longest
+except ImportError:
+    from itertools import izip_longest as zip_longest
+
 import argparse
+
+try:
+    from configparser import ConfigParser
+except ImportError:
+    from ConfigParser import SafeConfigParser as ConfigParser
+
+import plac
+
+if sys.version >= '3':
+    from inspect import getfullargspec
+else:
+    from plac import getfullargspec
+
 
 # defaults are defined by the function
 # defaults are overridden with values from config file
 # defaults and config file are overridden with command line parameters
 
-def _read_config(config, default_section=None):
-    try:
-        import configparser
-    except ImportError:
-        import ConfigParser as configparser
+CONFIG_PARSER_CFG = getfullargspec(ConfigParser.__init__).args[1:]
+# the default arguments accepted by a ConfigParser object
 
+def config_conf(obj):
+    "Extracts the configuration of the underlying ConfigParser from obj"
+    # If we ever want to add some default options this is where to do that
+    cfg = {}
+    for name in dir(obj):
+        if name in CONFIG_PARSER_CFG: # argument of ConfigParser
+            cfg[name] = getattr(obj, name)
+    return cfg
+
+
+def config_parser_from(obj, config, default_section=None, **confparams):
+    conf = config_conf(obj)
+    conf.update(confparams)
+    parser = ConfigParser(**conf)
+    parser.plac_ini_obj = obj
+    parser.plac_ini_config = config
+    parser.plac_ini_default_section = default_section
+    return parser
+
+
+def _read_config(cp, config, default_section=None):
     if sys.version >= '3':
-        cp = configparser.SafeConfigParser()
         try:
             with open(config) as fp:
                 cp.readfp(fp)
@@ -25,7 +61,6 @@ def _read_config(config, default_section=None):
         try:
             # this is needed in Python 2 to work with some kinds of ini files
             data = StringIO('\n'.join(line.strip() for line in open(config)))
-            cp = configparser.SafeConfigParser()
             cp.readfp(data)
         except IOError:
             # consider raising an exception here.
@@ -58,28 +93,62 @@ def add_gnu_argument(self, *args, **kwargs):
 
     argparse.ArgumentParser.add_argument(self, *gnu_args, **kwargs)
 
+def _print_exit(message, file=None):
+    if message:
+        if file is None:
+            file = sys.stderr
+        file.write(message)
+    sys.exit(2)
 
 def call(obj, arglist=sys.argv[1:], eager=True, config=None,
          default_section=None, gnu=True):
-    import plac
-
     if gnu:
         plac.ArgumentParser.add_argument = add_gnu_argument
 
     if config is None:
         return plac.call(obj, arglist=arglist, eager=eager)
 
-    try:
-        from itertools import zip_longest
-    except ImportError:
-        from itertools import izip_longest as zip_longest
-
     argparser = plac.parser_from(obj)
     argnames = argparser.argspec.args
     defaults = argparser.argspec.defaults
 
+    cp = config_parser_from(obj, config, default_section)
+
     cfg = dict(zip_longest(argnames, defaults))
-    cfg.update(_read_config(config, default_section))
+    ini_values = _read_config(cp, config, default_section)
+
+    for k in cfg.keys():
+        v = cfg[k]
+        try:
+            if isinstance(v, bool):
+                try:
+                    ini_values[k] = cp._convert_to_boolean(ini_values[k])
+                except ValueError:
+                    argparser.print_usage(sys.stderr)
+                    _print_exit(
+                        '{}: error: non-bool option {} = {} in:\n{}\n'.format(
+                            argparser.prog, k, ini_values[k], config))
+            elif isinstance(v, int):
+                try:
+                    ini_values[k] = int(ini_values[k])
+                except ValueError:
+                    argparser.print_usage(sys.stderr)
+                    _print_exit(
+                        '{}: error: non-int option {} = {} in:\n{}\n'.format(
+                            argparser.prog, k, ini_values[k], config))
+            elif isinstance(v, float):
+                try:
+                    ini_values[k] = float(ini_values[k])
+                except ValueError:
+                    argparser.print_usage(sys.stderr)
+                    _print_exit(
+                        '{}: error: non-float option {} = {} in:\n{}\n'.format(
+                            argparser.prog, k, ini_values[k], config))
+        except KeyError:
+            pass # value was not in the ini file
+
+    cfg.update(ini_values)
+
     if sys.version >= '3':
         items = cfg.items()
     else:
