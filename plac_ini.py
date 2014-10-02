@@ -117,35 +117,25 @@ def call(obj, arglist=sys.argv[1:], eager=True, config=None,
     cfg = dict(zip_longest(argnames, defaults))
     ini_values = _read_config(cp, config, default_section)
 
-    for k in cfg.keys():
-        v = cfg[k]
-        try:
-            if isinstance(v, bool):
+    for k in obj.__annotations__.keys():
+        a = plac.Annotation.from_(obj.__annotations__[k])
+        if a.type and k in ini_values:
+            if a.type is type(True):
                 try:
                     ini_values[k] = cp._convert_to_boolean(ini_values[k])
                 except ValueError:
                     argparser.print_usage(sys.stderr)
                     _print_exit(
-                        '{}: error: non-bool option {} = {} in:\n{}\n'.format(
+                        "{}: error: {}={} failed conversion to <type 'bool'> in:\n{}\n".format(
                             argparser.prog, k, ini_values[k], config))
-            elif isinstance(v, int):
+            else:
                 try:
-                    ini_values[k] = int(ini_values[k])
+                    ini_values[k] = a.type(ini_values[k])
                 except ValueError:
                     argparser.print_usage(sys.stderr)
                     _print_exit(
-                        '{}: error: non-int option {} = {} in:\n{}\n'.format(
-                            argparser.prog, k, ini_values[k], config))
-            elif isinstance(v, float):
-                try:
-                    ini_values[k] = float(ini_values[k])
-                except ValueError:
-                    argparser.print_usage(sys.stderr)
-                    _print_exit(
-                        '{}: error: non-float option {} = {} in:\n{}\n'.format(
-                            argparser.prog, k, ini_values[k], config))
-        except KeyError:
-            pass # value was not in the ini file
+                        '{}: error: {}={} failed conversion to {} in:\n{}\n'.format(
+                            argparser.prog, k, ini_values[k], a.type, config))
 
     cfg.update(ini_values)
 

@@ -24,13 +24,13 @@ Still working on tests!
 
 # Documentation
 
-The plac_ini module adds configuration file (INI) parsing to the plac module.
+The plac\_ini module adds configuration file (INI) parsing to the plac module.
 The plac module is a tool for building command line interfaces using Python.
 
 As with plac, the approach is to define a function in Python, annotate it using
 either the plac.annotations dectorator or Python 3's native annotations, then
-use plac_ini.call (rather than plac.call) to call your function. With
-plac_ini.call, you will also provide the path to a configuration file that can
+use plac\_ini.call (rather than plac.call) to call your function. With
+plac\_ini.call, you will also provide the path to a configuration file that can
 be used to set options and optionally a default INI section.
 
 Example:
@@ -113,14 +113,15 @@ A few items of note:
 * Defaults are specified in the function specification.
 * Defaults are overridden by entries in the config file.
 * Defaults and config file entries are overridden by command line options.
-* The config file will parse options into 'section_item' style names. A default section can be given which will be parsed back without the 'section_'.
-* If the config file is not found, plac_ini.call will try to proceed with defaults and command line options.
+* The config file will parse options into 'section\_item' style names. A default section can be given which will be parsed back without the 'section\_'.
+* If the config file is not found, plac\_ini.call will try to proceed with defaults and command line options.
 * Only items that are specified by the function definition will be provided. That is, if a config file has many more sections and items, they will not be provided in the argument list.
-* All things that plac can do, hopefully plac_ini works with, so reference that documentation and send me bug reports. I am going to work on tests.
-* The code is written to be compatible with plac.call. If 'config=FILEPATH' is not given, then plac_ini.call just calls plac.call. I've done this so the code would be easier to include in plac proper in the future.
+* All things that plac can do, hopefully plac\_ini works with, so reference that documentation and send me bug reports. I am going to work on tests.
+* Speaking of plac features, plac\_ini supports the conversion of types as specified in the annotations. Boolean types are a special case, as those are converted using `ConfigParser._convert_to_boolean`, which supports things like `1`, `yes`, `true`, and more for True / False values.
+* The code is written to be compatible with plac.call. If 'config=FILEPATH' is not given, then plac\_ini.call just calls plac.call. I've done this so the code would be easier to include in plac proper in the future.
 
 The source code is hosted on Github.
 
-https://github.com/fprimex/plac_ini
+https://github.com/fprimex/plac\_ini
 
 
